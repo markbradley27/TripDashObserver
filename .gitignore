@@ -1,3 +1,6 @@
+# Access token
+access_token.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
