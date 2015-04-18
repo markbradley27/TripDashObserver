@@ -1,6 +1,7 @@
 import argparse, yaml, json, dateutil.parser
 from stravaClient import Client
 
+
 def observe():
     # Parse arguments
     argParser = argparse.ArgumentParser()
@@ -18,10 +19,7 @@ def observe():
     client = Client(access_token)
 
     # Create local dict for storing data
-    stravaDump = {
-        'rides': {},
-        'stats': {},
-    }
+    stravaDump = {'rides': {}, 'stats': {}}
 
     # Get all activities newer than the start date
     for activity in client.get_activities():
@@ -33,9 +31,37 @@ def observe():
 
         else: break
 
-    # Print for now
+    # Compute statistics
+    for statistic in config['statisticize']:
+        stravaDump['stats'].setdefault(statistic['attribute'], {})[statistic['statistic']] = \
+          computeStatistic(stravaDump, statistic['attribute'], statistic['statistic'])
+
+    # Save json dump
     with open(config['outputFilename'], 'w') as outputFile:
         json.dump(stravaDump, outputFile, indent=2)
+
+
+def computeStatistic(dump, attribute, statistic):
+    result = 0;
+
+    # Grand total
+    if statistic == 'total':
+        for rideDate, ride in dump['rides'].items():
+            result += ride[attribute]
+        return result
+
+    # Daily average
+    elif statistic == 'dailyAverage':
+        dailyTotals = {}
+        for rideDate, ride in dump['rides'].items():
+            rideDate = dateutil.parser.parse(rideDate).date()
+            if rideDate not in dailyTotals: dailyTotals[rideDate] = 0
+            dailyTotals[rideDate] += ride[attribute]
+        days = 0
+        for date, total in dailyTotals.items():
+            days += 1
+            result += total
+        return result / days
 
 
 if __name__ == '__main__':

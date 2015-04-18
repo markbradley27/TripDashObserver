@@ -17,7 +17,7 @@ statisticize:                       # Activity attributes to compute statistics 
     statistic: total
 
 -   attribute: distance
-    statistic: average 
+    statistic: dailyAverage 
 
 -   attribute: total_elevation_gain
     statistic: total
