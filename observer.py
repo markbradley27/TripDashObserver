@@ -8,8 +8,7 @@ def observe():
     args = argParser.parse_args()
 
     # Read config
-    config = yaml.load(open('tdoConfig.yaml', 'r'))
-    print "Config:", config
+    config = yaml.load(open('config.yaml', 'r'))
 
     # Create client and authenticate
     access_token = args.access_token
