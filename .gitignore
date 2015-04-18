@@ -1,6 +1,9 @@
 # Access token
 access_token.txt
 
+# Dump files
+*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
