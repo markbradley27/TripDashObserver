@@ -1,4 +1,4 @@
-import argparse, yaml, json, dateutil.parser
+import argparse, yaml, json, dateutil.parser, logging, sys
 from stravaClient import Client
 
 
@@ -10,6 +10,9 @@ def observe():
 
     # Read config
     config = yaml.load(open('config.yaml', 'r'))
+
+    # Set up logger
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     # Create client and authenticate
     access_token = args.access_token
@@ -27,6 +30,7 @@ def observe():
     # Get all activities newer than the start date
     for activity in client.get_activities():
         if dateutil.parser.parse(activity['start_date']).date() > config['startDate']:
+            logging.info("Observing:" + activity['start_date'] + '-' + activity['name'])
 
             # If parameter to be stored in abreviated copy, add to strava dump
             for parameter in config['abreviatedAttributes']:
