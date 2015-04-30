@@ -14,7 +14,10 @@ def observe():
     # Create client and authenticate
     access_token = args.access_token
     if access_token == None:
-        access_token = open('access_token.txt', 'r').read().strip()
+	try:
+        	access_token = open('access_token.txt', 'r').read().strip()
+	except:
+		pass
     if access_token == None: raise Exception("Must provide Strava access token.")
     client = Client(access_token)
 
