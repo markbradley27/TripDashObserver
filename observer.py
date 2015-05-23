@@ -1,4 +1,4 @@
-import argparse, yaml, json, dateutil.parser, logging, sys
+import os, argparse, yaml, json, dateutil.parser, logging, sys
 from stravaClient import Client
 
 
@@ -9,7 +9,9 @@ def observe():
     args = argParser.parse_args()
 
     # Read config
-    config = yaml.load(open('config.yaml', 'r'))
+    scriptPath = os.path.dirname(os.path.realpath(__file__))
+    print scriptPath
+    config = yaml.load(open(scriptPath + '/config.yaml', 'r'))
 
     # Set up logger
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -18,7 +20,7 @@ def observe():
     access_token = args.access_token
     if access_token == None:
 	try:
-        	access_token = open('access_token.txt', 'r').read().strip()
+        access_token = open(scriptPath + '/access_token.txt', 'r').read().strip()
 	except:
 		pass
     if access_token == None: raise Exception("Must provide Strava access token.")
@@ -44,7 +46,7 @@ def observe():
           computeStatistic(stravaDump, statistic['attribute'], statistic['statistic'])
 
     # Save json dump
-    with open(config['outputFilename'], 'w') as outputFile:
+    with open(scriptPath + '/' + config['outputFilename'], 'w') as outputFile:
         json.dump(stravaDump, outputFile, indent=2)
 
 
