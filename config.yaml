@@ -1,4 +1,4 @@
-startDate: 2015-04-01               # All activities after this date will be aggregated
+startDate: 2015-05-02               # All activities after this date will be aggregated
 outputFilename: stravaDump.json
 
 abreviatedAttributes:               # Activity attributes to store in the abreviated strava dump
@@ -21,3 +21,4 @@ statisticize:                       # Activity attributes to compute statistics 
 
 -   attribute: total_elevation_gain
     statistic: total
+
