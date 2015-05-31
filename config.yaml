@@ -22,3 +22,6 @@ statisticize:                       # Activity attributes to compute statistics 
 -   attribute: total_elevation_gain
     statistic: total
 
+-   attribute: moving_time
+    statistic: total
+
