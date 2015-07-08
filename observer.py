@@ -32,6 +32,12 @@ def observe():
     # Get all activities newer than the start date
     for activity in client.get_activities():
         if dateutil.parser.parse(activity['start_date']).date() > config['startDate']:
+
+            # Skip blacklisted activities
+            if activity['id'] in config['activityBlacklist']:
+                logging.info("Skipping:" + activity['start_date'] + '-' + activity['name'])
+                continue
+
             logging.info("Observing:" + activity['start_date'] + '-' + activity['name'])
 
             # If parameter to be stored in abreviated copy, add to strava dump

@@ -25,3 +25,5 @@ statisticize:                       # Activity attributes to compute statistics 
 -   attribute: moving_time
     statistic: total
 
+activityBlacklist:                  # Activity IDs to exclude from the dump
+-   339193986
