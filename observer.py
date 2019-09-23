@@ -5,36 +5,36 @@ from stravaClient import Client
 def observe():
     # Parse arguments
     argParser = argparse.ArgumentParser()
-    argParser.add_argument('--access_token', action='store', help='Strava API access token')
+    argParser.add_argument('--token_path', action='store', help='Strava API token path')
+    argParser.add_argument('--client_creds_path', action='store', help='Strava API client creds path')
     args = argParser.parse_args()
 
     # Read config
     scriptPath = os.path.dirname(os.path.realpath(__file__))
-    print scriptPath
     config = yaml.load(open(scriptPath + '/config.yaml', 'r'))
 
     # Set up logger
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     # Create client and authenticate
-    access_token = args.access_token
-    if access_token == None:
-        try:
-            access_token = open(scriptPath + '/access_token.txt', 'r').read().strip()
-        except:
-            pass
-    if access_token == None: raise Exception("Must provide Strava access token.")
-    client = Client(access_token)
+    client_id = None
+    client_secret = None
+    with open(args.client_creds_path) as client_creds_file:
+        client_creds_data = json.load(client_creds_file)
+        client_id = client_creds_data['client_id']
+        client_secret = client_creds_data['client_secret']
+    client = Client(client_id, client_secret, args.token_path)
 
     # Create local dict for storing data
     stravaDump = {'rides': {}, 'stats': {}}
 
     # Get all activities newer than the start date
     for activity in client.get_activities():
+        print("Activity:", activity)
         if dateutil.parser.parse(activity['start_date']).date() > config['startDate']:
 
             # Skip blacklisted activities
-            if activity['id'] in config['activityBlacklist']:
+            if config['activityBlacklist'] is not None and activity['id'] in config['activityBlacklist']:
                 logging.info("Skipping:" + activity['start_date'] + '-' + activity['name'])
                 continue
 
